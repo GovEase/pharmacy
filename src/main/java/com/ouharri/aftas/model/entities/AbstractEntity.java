@@ -11,6 +11,8 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.io.Serializable;
+
 /**
  * Abstract base class for entities in the Aftas application.
  * Provides common fields such as id, creation timestamp, and update timestamp.
@@ -25,17 +27,14 @@ import org.hibernate.annotations.GenericGenerator;
 @MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class AbstractEntity<ID> extends AuditableEntity implements _Entity<ID> {
+public abstract class AbstractEntity<ID extends Serializable> extends AuditableEntity implements _Entity<ID> {
 
     /**
      * The unique identifier for the entity.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
+    @GenericGenerator(name = "UUID")
     private ID id;
 
 }
