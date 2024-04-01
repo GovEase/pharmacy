@@ -25,7 +25,7 @@ spring:
 
   ai:
     openai:
-      api-key: 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
+      api-key: ${OPENAI_API_KEY}
 
   cache:
     type: redis
