@@ -33,8 +33,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Implementation of the ChatBootService interface.
@@ -79,15 +81,65 @@ public class ChatBootServiceImpl implements ChatBootService {
     }
 
     /**
+     * Retrieves all chat sessions for the authenticated user.
+     *
+     * @return List of chat session response DTOs.
+     * @throws NoAuthenticateUser if the user is not authenticated.
+     */
+    public List<ChatSessionResponseDto> getAllSession() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null ||
+                !authentication.isAuthenticated() ||
+                authentication instanceof AnonymousAuthenticationToken)
+            throw new NoAuthenticateUser("User not authenticated");
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userService.findByEmail(userDetails.getUsername());
+
+        List<ChatSession> session = chatSessionRepository.findByUserOrderByCreatedAtDesc(user);
+
+        return chatSessionMapper.toResponse(session);
+    }
+
+
+    /**
      * Creates a new chat session with the provided user.
      *
      * @param user The user for the session.
      * @return The created chat session.
      */
-    public ChatSession createSession(User user) {
-        ChatSession session = ChatSession.builder().user(user).build();
+
+    public ChatSession createSession(User user, String message) {
+        AtomicReference<StringBuilder> prompt = new AtomicReference<>(new StringBuilder());
+
+        prompt.get().append("""
+                        You are a virtual medical assistant specialized in health and medicine. Your role is to assist users in understanding health issues and providing reliable and accurate medical information.
+
+                        Based on the following message:
+                        "{message}"
+
+                        Please provide a direct title or general subject related to health or medicine that best summarizes the user's message without repeating the question,without repeating mentioning instructions, without repeating any prefaces or labels like: "
+                        """)
+                .append(user.getFirstname())
+                .append("""
+                        : " or "Tobib: " or "General Subject: "... >
+                        """);
+
+        PromptTemplate promptTemplate = new PromptTemplate(prompt.toString());
+        promptTemplate.add("message", message);
+        ChatResponse response = chatClient.call(promptTemplate.create());
+
+        String title = response.getResult().getOutput().getContent().trim();
+
+        ChatSession session = ChatSession.builder()
+                .user(user)
+                .title(title)
+                .build();
+
         return chatSessionRepository.saveAndFlush(session);
     }
+
 
     /**
      * Retrieves a chat session by its ID.
@@ -97,9 +149,15 @@ public class ChatBootServiceImpl implements ChatBootService {
      * @throws ResourceNotFoundException if the chat session is not found.
      */
     public ChatSessionResponseDto getChatSession(UUID id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null ||
+                !authentication.isAuthenticated() ||
+                authentication instanceof AnonymousAuthenticationToken)
+            throw new NoAuthenticateUser("User not authenticated");
+
         ChatSession chatSession = chatSessionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("ChatSession not found with id: " + id));
-
         return modelMapper.map(chatSession, ChatSessionResponseDto.class);
     }
 
@@ -124,13 +182,13 @@ public class ChatBootServiceImpl implements ChatBootService {
             User user = userService.findByEmail(userDetails.getUsername());
 
             if (request.session() == null || request.session().getUser() == null)
-                chatMessage.setSession(createSession(user));
+                chatMessage.setSession(createSession(user, request.message()));
             else {
                 Optional<ChatSession> session = chatSessionRepository.findById(request.session().getId());
                 if (session.isPresent())
                     chatMessage.setSession(session.get());
                 else
-                    chatMessage.setSession(createSession(user));
+                    chatMessage.setSession(createSession(user, request.message()));
             }
 
             chatMessage.setSentByUser(true);
@@ -165,6 +223,7 @@ public class ChatBootServiceImpl implements ChatBootService {
      */
     @NotNull
     private PromptTemplate createPrompt(String message) {
+
         PromptTemplate promptTemplate = new PromptTemplate("""
                 Welcome to Tobib, your trusted personal medical assistant!
                         
@@ -175,6 +234,8 @@ public class ChatBootServiceImpl implements ChatBootService {
                 Tobib is trained using the latest medical knowledge and guidelines from reputable sources. It can offer general health advice, provide accurate information about medications and their effects, define medical terms, and guide you in finding qualified healthcare professionals near you. Tobib is committed to protecting your privacy and will not disclose any personal information.
                         
                 Human: {user_message}
+                                
+                Answers the Human's last question
                         
                 <If the user's query is related to health or medicine, provide a direct, comprehensive, and evidence-based response in the same language as the question, without repeating the question, mentioning instructions, or using any prefaces or labels. If necessary, request clarification or additional details to provide the most relevant and helpful response.
 
@@ -209,12 +270,9 @@ public class ChatBootServiceImpl implements ChatBootService {
                                 
                 """);
 
-        prompt
-                .append("Hello ")
+        prompt.append("Hello ")
                 .append(session.getUser().getFirstname())
-                .append(" ")
-                .append(session.getUser().getLastname())
-                .append(" ! How can I assist you today with any health or medical-related questions? I'm here to provide reliable and evidence-based information. \n\n");
+                .append("! How can I assist you today with any health or medical-related questions? I'm here to provide reliable and evidence-based information. \n\n");
 
         if (session.getMessages() != null && !session.getMessages().isEmpty())
             for (ChatMessage m : session.getMessages())
@@ -236,16 +294,30 @@ public class ChatBootServiceImpl implements ChatBootService {
 
         prompt.append("""
                 : {user_message}
-
-                <If the user's query is related to health or medicine, provide a direct, comprehensive, and evidence-based response in the same language as the question, without repeating the question, mentioning instructions, or using any prefaces or labels. If necessary, request clarification or additional details to provide the most relevant and helpful response. You may use the user information below to personalize your response.
-
-                If the user's query is not related to health or medicine, politely inform them that you are a medical assistant and cannot provide information on unrelated topics.>
-
-                Here is the information from the user who is speaking with you:
-                {user_info}
-
-                Feel free to ask me any other questions you may have! I'm here to provide reliable medical information and guidance.
+                                
+                Answers\s
                 """);
+
+        prompt.append(session.getUser().getFirstname())
+                .append("'s last question");
+
+        prompt.append("""
+
+                <If the user's query is related to health or medicine, provide a direct, comprehensive, and evidence-based response in the same language as the question, without repeating the question, mentioning instructions, or using any prefaces or labels like\s
+                """);
+
+        prompt.append(session.getUser().getFirstname())
+                .append(": \" or \"Tobib: \". ")
+                .append("""
+                        If necessary, request clarification or additional details to provide the most relevant and helpful response. You may use the user information below to personalize your response.
+
+                        If the user's query is not related to health or medicine, politely inform them that you are a medical assistant and cannot provide information on unrelated topics.>
+
+                        Here is the information from the user who is speaking with you:
+                        {user_info}
+
+                        Feel free to ask me any other questions you may have! I'm here to provide reliable medical information and guidance.
+                        """);
 
         PromptTemplate promptTemplate = new PromptTemplate(prompt.toString());
 
@@ -254,6 +326,8 @@ public class ChatBootServiceImpl implements ChatBootService {
 
             promptTemplate.add("user_message", message);
             promptTemplate.add("user_info", userJson);
+
+            System.out.println(promptTemplate.getTemplate());
 
             return promptTemplate;
         } catch (JsonProcessingException e) {

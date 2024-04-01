@@ -17,15 +17,22 @@ springdoc:
       enabled: true
 
 spring:
+
   application:
-    name: aftas
+    name: pharma
     admin:
       enabled: true
+
+  ai:
+    openai:
+      api-key: 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
+
   cache:
     type: redis
     redis:
       time-to-live: 60000
       cache-null-values: true
+
   data:
     redis:
       database: 0
@@ -33,26 +40,35 @@ spring:
         enabled: false
       host: localhost
       port: 6379
+
   docker:
     compose:
-      enabled: true
+      enabled: false
       file: compose.yaml
+
   datasource:
     url: ${APP_DB_URL}
     username: ${APP_DB_USER}
     password: ${APP_DB_PASS}
     driver-class-name: org.postgresql.Driver
+
   liquibase:
     change-log: classpath:db/db.changelog-master.yaml
+
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto:  update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
     database: postgresql
     open-in-view: false
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: never
   quartz:
     jdbc:
       initialize-schema: always
@@ -67,16 +83,18 @@ spring:
             instanceId: AUTO
           threadPool:
             threadCount: 5
+
   security:
     oauth2:
       resourceserver:
         opaque-token:
-          introspection-uri: https://www.googleapis.com/
+          introspection-uri: ${GOOGLE_INTROSPECTION_URI}
           clientId: ${GOOGLE_CLIENT_ID}
           clientSecret: ${GOOGLE_CLIENT_SECRET}
         jwt:
           issuer-uri: https://accounts.google.com
           jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -94,6 +112,6 @@ application:
   security:
     jwt:
       secret-key: ${JWT_SECRET_KEY}
-      expiration: 86400000
+      expiration: ${JWT_EXPIRATION_TIME}
       refresh-token:
-        expiration: 604800000
+        expiration: ${JWT_REFRESH_EXPIRATION_TIME}
