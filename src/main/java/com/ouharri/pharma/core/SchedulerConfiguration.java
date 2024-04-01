@@ -1,4 +1,4 @@
-package com.ouharri.aftas.core;
+package com.ouharri.pharma.core;
 
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
