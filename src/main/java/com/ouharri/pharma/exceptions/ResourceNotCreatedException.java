@@ -1,6 +1,6 @@
-package com.ouharri.aftas.exceptions;
+package com.ouharri.pharma.exceptions;
 
-import com.ouharri.aftas.model.dto.error.ApiErrorFactory;
+import com.ouharri.pharma.model.dto.error.ApiErrorFactory;
 import lombok.Getter;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
