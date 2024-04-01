@@ -1,6 +1,6 @@
-package com.ouharri.aftas.repositories;
+package com.ouharri.pharma.repositories;
 
-import com.ouharri.aftas.model.entities.Token;
+import com.ouharri.pharma.model.entities.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

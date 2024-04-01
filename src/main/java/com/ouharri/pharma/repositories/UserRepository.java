@@ -1,12 +1,14 @@
-package com.ouharri.aftas.repositories;
+package com.ouharri.pharma.repositories;
 
-import com.ouharri.aftas.model.entities.User;
-import com.ouharri.aftas.model.enums.Role;
-import com.ouharri.aftas.model.enums.UserStatus;
+import com.ouharri.pharma.model.entities.User;
+import com.ouharri.pharma.model.enums.Role;
+import com.ouharri.pharma.model.enums.UserStatus;
 import io.micrometer.common.lang.NonNullApi;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -65,4 +67,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
      * @return A page of users with the specified role.
      */
     Page<User> findAllByRole(Role role, Pageable pageable);
+
+    @Query("SELECT u FROM User u WHERE u.id = :userId")
+    Optional<User> findByIdWithCreatedAt(@Param("userId") UUID userId);
+
 }
