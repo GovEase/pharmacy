@@ -1,4 +1,4 @@
-package com.ouharri.aftas.security;
+package com.ouharri.pharma.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,7 +25,7 @@ import java.io.IOException;
 @Component
 public class CsrfCookieFilter extends OncePerRequestFilter {
 
-    private static final String CSRF_COOKIE_NAME = CsrfToken.class.getName();
+    private static final String CSRF_COOKIE_NAME = "XSRF-TOKEN-2";
 
     /**
      * Filters requests to add the CSRF token into a cookie.
@@ -39,7 +39,7 @@ public class CsrfCookieFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
             throws ServletException, IOException {
-        CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        CsrfToken csrfToken = (CsrfToken) request.getAttribute(CSRF_COOKIE_NAME);
 
         if (csrfToken != null) {
             Cookie cookie = WebUtils.getCookie(request, CSRF_COOKIE_NAME);
@@ -58,3 +58,4 @@ public class CsrfCookieFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
+
