@@ -1,10 +1,10 @@
-package com.ouharri.aftas.controllers;
+package com.ouharri.pharma.controllers;
 
-import com.ouharri.aftas.exceptions.ResourceNotCreatedException;
-import com.ouharri.aftas.model.dto.App.RestPage;
-import com.ouharri.aftas.model.dto.requests._Request;
-import com.ouharri.aftas.model.dto.responses._Response;
-import com.ouharri.aftas.services.spec._Service;
+import com.ouharri.pharma.exceptions.ResourceNotCreatedException;
+import com.ouharri.pharma.model.dto.App.RestPage;
+import com.ouharri.pharma.model.dto.requests._Request;
+import com.ouharri.pharma.model.dto.responses._Response;
+import com.ouharri.pharma.services.spec._Service;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -89,7 +89,6 @@ public abstract class _Controller<ID, RequestType extends _Request, ResponseType
         assert service != null;
         return ResponseEntity.ok(service.getAll());
     }
-
 
     /**
      * Retrieves an entity by its identifier.
