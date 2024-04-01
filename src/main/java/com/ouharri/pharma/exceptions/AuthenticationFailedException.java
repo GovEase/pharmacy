@@ -1,4 +1,4 @@
-package com.ouharri.aftas.exceptions;
+package com.ouharri.pharma.exceptions;
 
 /**
  * Custom exception class for handling authentication failures.
