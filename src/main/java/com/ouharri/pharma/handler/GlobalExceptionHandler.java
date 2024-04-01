@@ -1,8 +1,8 @@
-package com.ouharri.aftas.handler;
+package com.ouharri.pharma.handler;
 
-import com.ouharri.aftas.exceptions.AuthenticationFailedException;
-import com.ouharri.aftas.model.dto.error.ApiErrorFactory;
-import com.ouharri.aftas.model.dto.error.ApiSubError;
+import com.ouharri.pharma.exceptions.AuthenticationFailedException;
+import com.ouharri.pharma.model.dto.error.ApiErrorFactory;
+import com.ouharri.pharma.model.dto.error.ApiSubError;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.persistence.EntityNotFoundException;
