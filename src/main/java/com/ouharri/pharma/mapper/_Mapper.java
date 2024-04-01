@@ -1,8 +1,8 @@
-package com.ouharri.aftas.mapper;
+package com.ouharri.pharma.mapper;
 
-import com.ouharri.aftas.model.dto.requests._Request;
-import com.ouharri.aftas.model.dto.responses._Response;
-import com.ouharri.aftas.model.entities._Entity;
+import com.ouharri.pharma.model.dto.requests._Request;
+import com.ouharri.pharma.model.dto.responses._Response;
+import com.ouharri.pharma.model.entities._Entity;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
