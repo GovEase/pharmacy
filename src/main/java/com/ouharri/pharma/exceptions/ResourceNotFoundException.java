@@ -1,4 +1,4 @@
-package com.ouharri.aftas.exceptions;
+package com.ouharri.pharma.exceptions;
 
 /**
  * This class is used when an attempt to find an entity has thrown an exception.
