@@ -1,10 +1,10 @@
-package com.ouharri.aftas.controllers;
+package com.ouharri.pharma.controllers;
 
-import com.ouharri.aftas.exceptions.ResourceNotFoundException;
-import com.ouharri.aftas.model.entities.User;
-import com.ouharri.aftas.model.enums.Role;
-import com.ouharri.aftas.services.impl.JwtServiceImpl;
-import com.ouharri.aftas.services.spec.UserService;
+import com.ouharri.pharma.exceptions.ResourceNotFoundException;
+import com.ouharri.pharma.model.entities.User;
+import com.ouharri.pharma.model.enums.Role;
+import com.ouharri.pharma.services.impl.JwtServiceImpl;
+import com.ouharri.pharma.services.spec.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
