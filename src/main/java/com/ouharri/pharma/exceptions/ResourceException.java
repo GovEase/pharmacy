@@ -1,6 +1,6 @@
-package com.ouharri.aftas.exceptions;
+package com.ouharri.pharma.exceptions;
 
-import com.ouharri.aftas.model.entities.User;
+import com.ouharri.pharma.model.entities.User;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
