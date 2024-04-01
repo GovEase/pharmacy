@@ -1,4 +1,4 @@
-package com.ouharri.aftas.core;
+package com.ouharri.pharma.core;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -34,11 +34,11 @@ import io.swagger.v3.oas.annotations.servers.Server;
         servers = {
                 @Server(
                         description = "PROD ENV",
-                        url = "http://54.162.210.15:8085"
+                        url = "http://localhost:8084"
                 ),
                 @Server(
                         description = "Test ENV",
-                        url = "http://localhost:8084    "
+                        url = "http://localhost:8084"
                 ),
                 @Server(
                         description = "Local ENV",
