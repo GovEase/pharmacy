@@ -1,20 +1,17 @@
-package com.ouharri.aftas.controllers;
+package com.ouharri.pharma.controllers;
 
-import com.ouharri.aftas.model.dto.requests.ChangePasswordRequest;
-import com.ouharri.aftas.model.dto.requests.ChangeRoleRequest;
-import com.ouharri.aftas.model.dto.requests.UserRequest;
-import com.ouharri.aftas.model.dto.responses.UserResponses;
-import com.ouharri.aftas.model.entities.User;
-import com.ouharri.aftas.services.spec.UserService;
+import com.ouharri.pharma.model.dto.requests.ChangePasswordRequest;
+import com.ouharri.pharma.model.dto.requests.ChangeRoleRequest;
+import com.ouharri.pharma.model.dto.requests.UserRequest;
+import com.ouharri.pharma.model.dto.responses.UserResponsesDto;
+import com.ouharri.pharma.services.spec.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -28,7 +25,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v2/users")
-public class UserController extends _Controller<UUID, UserRequest, UserResponses, UserService> {
+public class UserController extends _Controller<UUID, UserRequest, UserResponsesDto, UserService> {
 
     /**
      * Changes the password of the currently logged-in user.
@@ -59,8 +56,8 @@ public class UserController extends _Controller<UUID, UserRequest, UserResponses
      *
      * @return ResponseEntity containing the current user's details.
      */
-    @GetMapping("/current")
-    public ResponseEntity<UserResponses> getCurrentUser() {
-        return ResponseEntity.ok(service.getCurrentUser());
-    }
+        @GetMapping("/current")
+        public ResponseEntity<UserResponsesDto> getCurrentUser() {
+            return ResponseEntity.ok(service.getCurrentUser());
+        }
 }
