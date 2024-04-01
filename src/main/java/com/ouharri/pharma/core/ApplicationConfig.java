@@ -1,7 +1,8 @@
-package com.ouharri.aftas.core;
+package com.ouharri.pharma.core;
 
-import com.ouharri.aftas.repositories.UserRepository;
-import com.ouharri.aftas.security.GoogleOpaqueTokenIntrospector;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ouharri.pharma.repositories.UserRepository;
+import com.ouharri.pharma.security.GoogleOpaqueTokenIntrospector;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -100,6 +101,11 @@ public class ApplicationConfig {
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 
 
