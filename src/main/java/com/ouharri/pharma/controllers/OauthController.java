@@ -1,8 +1,8 @@
-package com.ouharri.aftas.controllers;
+package com.ouharri.pharma.controllers;
 
-import com.ouharri.aftas.model.dto.Oauth.UrlDto;
-import com.ouharri.aftas.model.dto.responses.AuthenticationResponse;
-import com.ouharri.aftas.services.spec.OauthService;
+import com.ouharri.pharma.model.dto.Oauth.UrlDto;
+import com.ouharri.pharma.model.dto.responses.AuthenticationResponse;
+import com.ouharri.pharma.services.spec.OauthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
