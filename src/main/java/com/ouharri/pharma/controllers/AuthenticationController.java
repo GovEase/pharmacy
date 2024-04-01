@@ -1,10 +1,10 @@
-package com.ouharri.aftas.controllers;
+package com.ouharri.pharma.controllers;
 
-import com.ouharri.aftas.exceptions.ResourceNotCreatedException;
-import com.ouharri.aftas.model.dto.requests.AuthenticationRequest;
-import com.ouharri.aftas.model.dto.requests.RegisterRequest;
-import com.ouharri.aftas.model.dto.responses.AuthenticationResponse;
-import com.ouharri.aftas.services.spec.AuthenticationService;
+import com.ouharri.pharma.exceptions.ResourceNotCreatedException;
+import com.ouharri.pharma.model.dto.requests.AuthenticationRequest;
+import com.ouharri.pharma.model.dto.requests.RegisterRequest;
+import com.ouharri.pharma.model.dto.responses.AuthenticationResponse;
+import com.ouharri.pharma.services.spec.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
